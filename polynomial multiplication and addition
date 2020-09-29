@@ -1,0 +1,276 @@
+//// multiply  and add two polynomial function in C dsa///////
+////if u face any problem or issue let me know in comment with the line no .Thanks////
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct list
+{
+	struct list* next;
+	int exp,base;
+};
+
+void insert(struct list** head,int base,int e)
+{
+	if(base==0)
+	{
+		return;
+	}
+	struct list* newnode=(struct list*)malloc(sizeof(struct list));
+	newnode->exp=e;
+	newnode->base=base;
+	struct list* temp=*head;
+	if(temp==NULL)
+	{
+		newnode->next=*head;
+		*head=newnode;
+		return;
+	}
+	while(temp->next!=NULL)
+	{
+		temp=temp->next;
+	}
+	temp->next=newnode;
+	newnode->next=NULL;
+	return;
+}
+
+void addition(struct list** head1,struct list** head2,struct list** head3)
+{
+	struct list* temp=*head1;
+	while(temp!=NULL)
+	{
+		int b=temp->base;
+		int e=temp->exp;
+		struct list* t=*head2;
+		while(t!=NULL)
+		{
+			if(e==t->exp)
+			{
+				b=b+t->base;
+			}
+			t=t->next;
+		}
+		insert( (&(*head3)) , b,e);
+		temp=temp->next;
+	}
+}
+
+void normalisation(struct list** head4,struct list* head3)
+{
+	struct list* temp=head3;
+	int arr[100000];
+	int c=0;
+	struct list* newnode=(struct list*)malloc(sizeof(struct list));
+	while(temp!= NULL)
+	{
+		if(c!=0)
+		{
+			for(int i=0;i<c;i++)
+			{
+				if(temp->exp==arr[i])
+				{
+					temp=temp->next;
+					continue;
+				}
+			}
+		}
+		
+		struct list* t=(temp->next);
+		int e=temp->exp;
+		int b=temp->base;
+		while(t!= NULL)
+		{
+			if(temp->exp==t->exp)
+			{
+				b=b+t->base;
+			}
+			t=t->next;
+		}
+		insert(  (&(*head4))  ,b,e);
+		arr[c++]=temp->exp;
+		temp=temp->next;
+	}
+}
+
+void display(struct list* head)
+{
+	struct list* temp=head;
+	while(temp->next!=NULL)
+	{
+		if(temp->base>=0)
+		{
+			printf(" + %dx^%d ",temp->base,temp->exp);
+		}
+		else
+		{
+			printf(" %dx^%d ",temp->base,temp->exp);
+		}
+		temp=temp->next;
+	}
+	if(temp->base >= 0)
+	{
+		printf(" + %d",temp->base);
+	}
+	else
+	{
+		printf("%d",temp->base);
+	}
+	return;
+}
+
+void multiplication(struct list** head1,struct list** head2,struct list** head3)
+{
+	struct list* newnode=(struct list*)malloc(sizeof(struct list));
+	struct list* temp=*head1;
+	while(temp!= NULL)
+	{
+		struct list* t=*head2;
+		while(t!=NULL)
+		{
+			int b=((temp->base)*(t->base));
+			int e=((temp->exp)+(t->exp));
+			insert( (&(*head3))  ,b,e);
+			t=t->next;
+		}
+		temp=temp->next;
+	}
+}
+
+void initialisation(struct list** head1,struct list** head2,struct list** head3,struct list** head4,struct list** head5)
+{
+	*head1=NULL;
+	*head2=NULL;
+	*head3=NULL;
+	*head4=NULL;
+	*head5=NULL;
+	return;
+}
+
+
+
+int main(void) 
+{
+	struct list *head1;
+	struct list *head2;
+	struct list* head3;
+	struct list* head4;
+	struct list* head5;
+
+	initialisation(&head1,&head2,&head3,&head4,&head5);
+	int a,b,i;
+	printf("1:multiply 2:add 3:do multiply and addition 4:exit\n");
+	while(1)
+	{
+		printf("what u want to do----->");scanf("%d",&i);printf("\n");
+		switch(i)
+		{
+			case 1:
+			        
+			initialisation(&head1,&head2,&head3,&head4,&head5);
+			printf("enter the highestdegree of 1st polynomial-->");scanf("%d",&a);printf("\n");
+	                printf("enter the highest degree of 2nd polynomial-->");scanf("%d",&b);printf("\n");
+	                printf("----------for 1st polynomial-------------\n");
+	                for(int i=a;i>=0;i--)
+	                {
+		                int base;
+		                printf("enter base value for x^%d degree--->",i);scanf("%d",&base);printf("\n");
+		                insert(&head1,base,i);
+	                }
+	                printf("----------for 2nd polynomial-----");printf("\n");
+	                for(int i=b;i>=0;i--)
+	                {
+		                int base;
+		                printf("enter base value for x^%d degree--->",i);scanf("%d",&base);printf("\n");
+		                insert(&head2,base,i);
+	                }
+			printf("your 1st polynomial is---->");display(head1);printf("\n");
+			printf("your 2nd polynomial is---->");display(head2);printf("\n");
+			if(a>=b)
+	                {
+		                multiplication(&head1,&head2,&head3);
+	                }
+	                else
+	                {
+		                multiplication(&head2,&head1,&head3);
+	                }   
+			normalisation(&head4,head3);
+			printf("after multiply the polynomial is---->");display(head4);printf("\n");
+			break;
+
+			case 2:
+
+			initialisation(&head1,&head2,&head3,&head4,&head5);
+			printf("enter the highestdegree of 1st polynomial-->");scanf("%d",&a);printf("\n");
+	                printf("enter the highest degree of 2nd polynomial-->");scanf("%d",&b);printf("\n");
+	                printf("----------for 1st polynomial-------------\n");
+	                for(int i=a;i>=0;i--)
+	                {
+		                int base;
+		                printf("enter base value for x^%d degree--->",i);scanf("%d",&base);printf("\n");
+		                insert(&head1,base,i);
+	                }
+	                printf("----------for 2nd polynomial-----");printf("\n");
+	                for(int i=b;i>=0;i--)
+	                {
+		                int base;
+		                printf("enter base value for x^%d degree--->",i);scanf("%d",&base);printf("\n");
+		                insert(&head2,base,i);
+	                }
+			printf("your 1st polynomial is---->");display(head1);printf("\n");
+			printf("your 2nd polynomial is---->");display(head2);printf("\n");
+
+			if(a>=b)
+	                {
+		                addition(&head1,&head2,&head3);
+	                }
+	                else
+	                {
+		                addition(&head2,&head1,&head3);
+	                }       
+			printf("after addition your polynomial will be---->");display(head3);printf("\n");
+			break; 
+
+			case 3:
+
+			initialisation(&head1,&head2,&head3,&head4,&head5);
+			printf("enter the highestdegree of 1st polynomial-->");scanf("%d",&a);printf("\n");
+	                printf("enter the highest degree of 2nd polynomial-->");scanf("%d",&b);printf("\n");
+	                printf("----------for 1st polynomial-------------\n");
+	                for(int i=a;i>=0;i--)
+	                {
+		                int base;
+		                printf("enter base value for x^%d degree--->",i);scanf("%d",&base);printf("\n");
+		                insert(&head1,base,i);
+	                }
+	                printf("----------for 2nd polynomial-----");printf("\n");
+	                for(int i=b;i>=0;i--)
+	                {
+		                int base;
+		                printf("enter base value for x^%d degree--->",i);scanf("%d",&base);printf("\n");
+		                insert(&head2,base,i);
+	                }
+			printf("your 1st polynomial is---->");display(head1);printf("\n");
+			printf("your 2nd polynomial is---->");display(head2);printf("\n");
+
+			if(a>=b)
+	                {
+		                multiplication(&head1,&head2,&head3);
+				addition(&head1,&head2,&head5);
+	                }
+	                else
+	                {
+		                multiplication(&head2,&head1,&head3);
+				addition(&head2,&head1,&head5);
+	                } 
+			normalisation(&head4,head3);
+			printf("after multiply the polynomial is---->");display(head4);printf("\n");
+			printf("after addition your polynomial will be---->");display(head5);printf("\n");
+			break;
+
+			case 4:
+			printf("thanks for using our program !!!!");
+			exit(0);
+	        }
+	}
+}
